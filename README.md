@@ -1,7 +1,7 @@
 # FPCA_SESYNC
 
 ## The Project
-This 
+This repo was created to implement analyses of data from the project "Food Price Crowdsourcing in Africa (FPCA)".
 
 ## The Team
 
@@ -10,6 +10,10 @@ This
 
 
 ## Our Objectives
+
+
+
+## Credits/Acknowledgement
 
 
 
