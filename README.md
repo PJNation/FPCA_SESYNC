@@ -1,7 +1,7 @@
 # FPCA_SESYNC
 
 ## The Project
-This repo was created to implement analyses of data from the pilot project "Food Price Crowdsourcing in Africa (FPCA)", as part of SESYNC Workshop. The goal is to understand spatial and temporal changes in commodity food price along the value-chain.
+Food prices is an indicator of food security because they affect affordability and nutritional choices. This repo was created to implement analyses of data from the pilot project "Food Price Crowdsourcing in Africa (FPCA)", as part of SESYNC Workshop. The goal is to understand spatial and temporal changes in commodity food price along the value-chain.
 
 ## The Team
 The team is comprised of researchers from International Institute of Tropical Agriculture - IITA
