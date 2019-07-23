@@ -1,15 +1,15 @@
 # FPCA_SESYNC
 
-##The Project
+## The Project
 This 
 
-##The Team
+## The Team
 
 
-##The Data
+## The Data
 
 
-##Our Objectives
+## Our Objectives
 
 
 
