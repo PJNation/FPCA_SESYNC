@@ -22,11 +22,6 @@ Commodity Food Price data were acquired through crowdsourcing from volunteers wh
 
 
 
-
-
 ## Credits/Acknowledgement
 
-
-
-
-This is a repo for Food Security Group at SESYNC Training. This project is focused assessment of seasonal transition of some commodity food prices in Nigeria. Making up the team are Julius Adewopo and Sarah Temilade Adekola.
+European Commission Joint Research Center (EC-JRC); Wageningen Environmental and Research (WeNR); 
