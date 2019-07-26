@@ -6,72 +6,6 @@ library(tidyr)
 library(lubridate)
 library(sf)
 library(ggplot2)
-#### Functions used in script ####
-
-prep_col <- function(in_filename,Template_Column_Names,out_filename=NULL){
-  # function to select columns from input files for excel file
-  Template_Column_Names <- c('submission time', 'VC_ID',	'lat',	'long', 'market_type',	'Price_Ymaize_PerKg',	'price_Wmaize_perkg',	'price_Thailand_perkg',	'price_Indian_perkg') 
-  #Template_Column_type <- c('date', 'numeric',	'numeric',	'numeric', 'text',	'numeric',	'numeric',	'numeric',	'numeric') 
-  data_in <- read_excel(in_filename,sheet = 1, col_types = 'text')
-  data_processed <- data_in %>%
-    select(Template_Column_Names)
-  if(!is.null(out_filename)){
-    #out_filename <- 
-    write.table(data_processed,file = out_filename, sep = ",")
-    
-  }
-  return(data_processed)
-}
-
-Template_Column_type <- c('date', 'numeric',	'numeric',	'numeric', 'text',	'numeric',	'numeric',	'numeric',	'numeric') 
-
-##############
-
-#filename <- 'C:\\Users\\SChiejile\\Desktop\\FPCA\\Crowd Survey\\PILOT SURVEY DATA-20190711T092111Z-001\\PILOT SURVEY DATA\\compiled_WK1 to WK4.xlsx'
-
-#week_1 <- read_excel(filename, sheet = 2)
-#week_2 <- read_excel(filename, sheet = 3)
-
-#Template_Column_Names <- ('submission time', 'VC_ID',	'lat	long', 'market_type',	'Price_Ymaize_PerKg',	'price_Wmaize_perkg',	'price_Thailand_perkg',	'price_Indian_perkg')
-week_data <- week_1
-Template_Column_Names <- c('submission time', 'VC_ID',	'lat',	'long', 'market_type',	'Price_Ymaize_PerKg',	'price_Wmaize_perkg',	'price_Thailand_perkg',	'price_Indian_perkg')
-
-list_file_names <- list.files("C:/Users/SChiejile/Dropbox/SESYNC_Training/FPCA_Data_20190724",
-                              full.names = T)
-
-
-#list_file_path <- paste0("C:/Users/SChiejile/Dropbox/SESYNC_Training/FPCA_Data_20190724/",list_file_names)
-
-#list_file_names <- c(filename,filename)
-
-list_data_processed <- lapply(list_file_names,
-                              FUN=prep_col)
-
-
-data_combined <- purrr::reduce(list_data_processed, full_join)
-out_dir <- getwd()
-
-out_filename <- file.path(out_dir,"data_combined1.csv")
-
-write.csv(Data1, file = out_filename)
-
-View(data_combined)
-
-Data1 <-   rename(data_combined, submit_time=`submission time`)
-
-yr<-c("2018", "2019")
-
-Data2 <- Data1 %>%
-    select(submit_time, contains('2018'))
-
-
-
-
-
-
-
-
-
 
 
 ##Working with the combined data
@@ -106,6 +40,42 @@ tidy_data_grouped <- tidy_data %>%
       group_by(date, All_Commodities, mkt_type) %>%
       summarize(mean = mean(Price_Naira, na.rm = TRUE))
 
+
+##Plotting all Commodities by market segment
+ggplot(na.omit(tidy_data_grouped),
+       aes(x = date, y = mean, color=All_Commodities)) + 
+  geom_line() 
+#+geom_smooth(
+ #   method = 'lm',
+   # aes(group = All_Commodities), color="black")
++facet_wrap(vars(mkt_type)) +
+  theme(legend.position="bottomleft")
+
+
+
+#Subsetting dataset for each commodity 
+
+local_grainYM <- subset(tidy_data_grouped, tidy_data_grouped$All_Commodities=="Ymaize")
+local_grainWM <- subset(tidy_data_grouped, tidy_data_grouped$All_Commodities=="Wmaize")
+import_grainTR <- subset(tidy_data_grouped, tidy_data_grouped$All_Commodities=="ThaiRice")
+import_grainIR <- subset(tidy_data_grouped, tidy_data_grouped$All_Commodities=="IndianRic")
+
+#Testing for significant difference in variance through time as an indicator of price volatility
+
+##Null hypothesis is that imported commodity prices are less volatile compared to local commodity
+
+test1<-var.test(local_grainYM$mean,local_grainWM$mean)
+test2<-var.test(local_grainYM$mean,import_grainIR$mean)
+test3<-var.test(import_grainTR$mean,import_grainIR$mean)
+
+
+c(test1[[3]],test2[[3]],test3[[3]])
+
+
+
+
+                                              mutate('YMaize',All_Commodities))
+
 local_grainYM <- tidy_data_grouped %>% filter(tidy_data_grouped,
               mutate('YMaize',All_Commodities))
 
@@ -126,21 +96,16 @@ ggplot(na.omit(tidy_data_grouped),
     aes(group = All_Commodities)) +
   facet_wrap(vars(mkt_type))
 
-##Plotting all Commodities
-ggplot(na.omit(tidy_data_grouped),
-       aes(x = date, y = mean, color=All_Commodities)) + 
-  geom_line() +
-    facet_wrap(vars(mkt_type)) +
-  theme(legend.position="bottomleft")
+
 
 
 ##Plotting local Commodity by market segment
 
-  ggplot(na.omit(local_grain),
-       aes(x = date, y = mean, color=All_Commodities)) + 
+  ggplot(na.omit(local_grainYM),
+       aes(x = date, y = mean)) + 
   geom_line() +
   facet_wrap(vars(mkt_type)) +
-  theme(legend.position="bottomleft")
+  
 
 
 
